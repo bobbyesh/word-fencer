@@ -7,7 +7,7 @@ class TestTrie(unittest.TestCase):
     def test_one_entry(self):
         trie = parser.Trie()
         trie.add_string('ABC')
-        self.assertTrue(trie.find_match('ABC'))
+        self.assertTrue('ABC' in trie)
         self.assertTrue(trie.root == {'A' : {'B': {'C': None}}})
 
     def test_two_entry(self):
@@ -17,42 +17,42 @@ class TestTrie(unittest.TestCase):
         trie = parser.Trie()
         trie.add_string('ABC')
         trie.add_string('Axx')
-        self.assertTrue(trie.find_match('ABC'))
+        self.assertTrue('ABC' in trie)
 
     def test_same_first_middle(self):
         trie = parser.Trie()
         trie.add_string('ABC')
         trie.add_string('ABX')
-        self.assertTrue(trie.find_match('ABC'))
-        self.assertTrue(trie.find_match('ABX'))
+        self.assertTrue('ABC' in trie)
+        self.assertTrue('ABX' in trie)
 
     def test_different_first(self):
         trie = parser.Trie()
         trie.add_string('ABC')
         trie.add_string('ZBC')
-        self.assertTrue(trie.find_match('ABC'))
-        self.assertTrue(trie.find_match('ZBC'))
+        self.assertTrue('ABC' in trie)
+        self.assertTrue('ZBC' in trie)
 
     def test_no_match_first(self):
         trie = parser.Trie()
         trie.add_string('ABC')
-        self.assertFalse(trie.find_match('?BC'))
+        self.assertFalse('?BC' in trie)
 
     def test_no_match_mid(self):
         trie = parser.Trie()
         trie.add_string('ABC')
-        self.assertFalse(trie.find_match('A?C'))
+        self.assertFalse('A?C' in trie)
 
     def test_no_match_last(self):
         trie = parser.Trie()
         trie.add_string('ABC')
-        self.assertFalse(trie.find_match('AB?'))
+        self.assertFalse('AB?' in trie)
 
     def test_different_end(self):
         trie = parser.Trie()
         trie.add_string('ABC')
         trie.add_string('ABX')
-        self.assertFalse(trie.find_match('AB?'))
+        self.assertFalse('AB?' in trie)
 
 class TestParser(unittest.TestCase):
 
