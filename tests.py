@@ -1,81 +1,91 @@
 import unittest
 import parser
+import trie
 
 
 class TestTrie(unittest.TestCase):
 
     def test_one_entry(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        self.assertTrue('ABC' in trie)
-        self.assertTrue(trie.root == {'A' : {'B': {'C': None}}})
+        t = trie.Trie()
+        t.add_string('ABC')
+        self.assertTrue('ABC' in t)
+        self.assertTrue(t.root == {'A' : {'B': {'C': None}}})
 
     def test_two_entry(self):
-        '''
-        Trie matches 'ABC' after adding 'ABC' and 'Axx'.
-        '''
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        trie.add_string('Axx')
-        self.assertTrue('ABC' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        t.add_string('Axx')
+        self.assertTrue('ABC' in t)
 
     def test_same_first_middle(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        trie.add_string('ABX')
-        self.assertTrue('ABC' in trie)
-        self.assertTrue('ABX' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        t.add_string('ABX')
+        self.assertTrue('ABC' in t)
+        self.assertTrue('ABX' in t)
 
     def test_different_first(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        trie.add_string('ZBC')
-        self.assertTrue('ABC' in trie)
-        self.assertTrue('ZBC' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        t.add_string('ZBC')
+        self.assertTrue('ABC' in t)
+        self.assertTrue('ZBC' in t)
 
     def test_no_match_first(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        self.assertFalse('?BC' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        self.assertFalse('?BC' in t)
 
     def test_no_match_mid(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        self.assertFalse('A?C' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        self.assertFalse('A?C' in t)
 
     def test_no_match_last(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        self.assertFalse('AB?' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        self.assertFalse('AB?' in t)
 
     def test_different_end(self):
-        trie = parser.Trie()
-        trie.add_string('ABC')
-        trie.add_string('ABX')
-        self.assertFalse('AB?' in trie)
+        t = trie.Trie()
+        t.add_string('ABC')
+        t.add_string('ABX')
+        self.assertFalse('AB?' in t)
+
 
 class TestParser(unittest.TestCase):
 
 
+    def setUp(self):
+        self.p = parser.Parser('sample_word_ref.txt')
+        self.p.force_populate()
+
     def test_single_token(self):
-        '''
-        Passes if dictionary with 'ABC' entry correctly parses
-        string 'ABC' into the token list ['ABC'].
-        '''
-        test_list = ['ABC']
-        p = parser.Parser(test_list)
-        result = p.parse('ABC')
-        self.assertEqual(['ABC'], result)
+        result = self.p.parse('感')
+        self.assertEqual(['感'], result)
 
 
     def test_first_string_match(self):
-        '''
-        Passes when a dictionary with only an 'ABC' entry
-        correctly tokenizes 'ABCDE' into ['ABC', 'D', 'E'].
-        '''
-        p = parser.Parser(['ABC'])
-        result = p.parse('ABCDE')
-    
+        result = self.p.parse('感?')
+        self.assertEqual(['感','?'], result)
+
+    def test_two_word_sequence(self):
+       result = self.p.parse('政府感同身受')
+       self.assertEqual(['政府', '感同身受'], result)
+
+    def test_two_similar_words(self):
+       result = self.p.parse('非政府政府')
+       self.assertEqual(['非政府', '政府'], result)
+
+    def test_matches_and_nonmatches_mixed(self):
+       result = self.p.parse('受非政府盈政府')
+       self.assertEqual(['受','非政府', '盈','政府'], result)
+
+    def test_parser_error(self):
+        temp = parser.Parser('sample_word_ref.txt')
+        with self.assertRaises(parser.ParserError):
+            temp.parse('a')
+
     
 
 if __name__ == '__main__':
