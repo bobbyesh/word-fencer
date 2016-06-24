@@ -6,85 +6,76 @@ These are languages such as Chinese, Hindi, Thai, etc...
 
 '''
 
-import collections.abc
-from itertools import zip_longest
+from trie import Trie
 
+class ParserError(Exception):
 
-class Trie(collections.abc.Container):
-
-    def __init__(self):
-        self.root = dict()
-
-    def add_string(self, string):
-        current_node = self.root
-        for pair in zip_longest(string, string[1:]):
-            if (pair[0] not in current_node and
-                pair[1] is not None):
-                current_node[pair[0]] = { pair[1] : dict() }
-            elif (pair[0] not in current_node and
-                pair[1] is None):
-                current_node[pair[0]] = pair[1]
-            current_node = current_node[pair[0]]
-
-    def __contains__(self, seq): 
-        current_node = self.root
-        try:
-            for elem in seq:
-                current_node = current_node[elem]
-        except KeyError:
-            return False
-        return True
-        
-    def find_match(self, string):
-        current_node = self.root
-        try:
-            for c in string:
-                current_node = current_node[c]
-        except KeyError:
-            return False
-        return True
+    def __init__(self, message):
+        self.message = message
 
 
 
-class Parser:
+
+class Parser(object):
 
 
     def __init__(self, word_file):
         '''
-        Words must be set before building the trie.
-        '''
-        self.words = word_file
-        self.trie = self.build_trie()
-        pass
+        Initializes parser with a word reference file.
 
+        '''
+        self.trie = Trie()
+        self.word_file = word_file
+        self.populated = False
+    
     def parse(self, string):
-        result = ''
-        tokens = list()
-        current = self.trie
-        prev = 0
-        for ix,s in enumerate(string):
-            if current[s]:
-                current = current[s]
-            elif current[s] == None:
-                tokens.append(string[prev:ix+1])
-                prev = ix+1
-                current = self.trie
-        return tokens
-
-    def set_wordref(self, file):
-        ''' 
-        Sets which file to use as the reference dictionary.
         '''
-        self.words = file
+        Returns a list of all the longest valid tokens in string.
+        This follows a 'maximal munch' algorithm, matching only
+        the longest strings.
 
-    def build_trie(self):
-        trie_root = dict()
-        for word in self.words:
-            for ix,right_char in enumerate(reversed(word)):
-                if ix == 0:
-                    left_char = { right_char : None }
-                else:
-                    current = { right_char : left_char }
-                    left_char = current
-            trie_root = left_char
-        self.trie = trie_root
+        For example, if 'foot' and 'footwear' are both in the trie,
+        then the resulting list will contain footwear, not foot.
+
+        If a character is not found in the trie, the character will
+        simply be appended to the list.
+
+        '''
+        if self.populated:
+            results = list()
+            while(string):
+                token = self.__next_token(string)
+                results.append(token)
+                string = string[len(token):]
+            return results
+        else:
+            raise ParserError("Parser not yet populated, must call force_populate() before parsing.")
+
+    def __next_token(self, string):
+        '''
+        Returns the next valid token.
+        '''
+        temp = ''
+        for c in string:
+            temp += c
+            if temp in self.trie:
+                continue
+            elif (temp not in self.trie and
+                    temp is c):
+                return temp
+            elif(temp not in self.trie and
+                    temp is not c):
+                return temp[:-1]
+        return temp
+        
+
+    def force_populate(self):
+        '''
+        Populates the parser with the entire contents of the 
+        word_file.
+        '''
+        with open(self.word_file, 'r') as f:
+            for word in f:
+                self.trie.add_string(word)
+        self.populated = True
+
