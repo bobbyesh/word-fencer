@@ -16,6 +16,9 @@ class ParserError(Exception):
 def parser_factory(lang):
     class_ = {
             'zh-Hans' : ChineseSimplifiedParser,
+            'zh-Hant' : ChineseTraditionalParser,
+            'yue-Hans' : CantoneseSimplifiedParser,
+            'yue-Hans' : CantoneseTraditionalParser,
             }.get(lang)
     return class_()
 
@@ -34,7 +37,7 @@ class Parser(object):
             raise ParserError('Parser not yet populated, must cal force_populate()')
         results = list()
         while(string):
-            token = self._next_token(string)
+            token = self.__next_token(string)
             if token:
                 results.append(token)
                 string = string[len(token):]
@@ -42,7 +45,7 @@ class Parser(object):
                 string = ''
         return results
 
-    def _next_token(self, string):
+    def __next_token(self, string):
         temp = ''
         for c in string:
             temp += c
@@ -51,8 +54,6 @@ class Parser(object):
                     return temp[:-1]
                 if len(temp) == 1:
                     return temp
-            else:
-                continue
         return temp
 
     def force_populate(self):
