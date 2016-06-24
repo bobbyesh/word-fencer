@@ -1,5 +1,6 @@
 import unittest
 import parser
+from parser import *
 import trie
 
 
@@ -53,12 +54,46 @@ class TestTrie(unittest.TestCase):
         self.assertFalse('AB?' in t)
 
 
-class TestParser(unittest.TestCase):
+class TestParserFactory(unittest.TestCase):
+
+
+    def test_chinese_simplified(self):
+        p = parser_factory('zh-Hans')
+        self.assertTrue(type(p) is ChineseSimplifiedParser)
+
+class TestChineseSimplifiedParserFactory(unittest.TestCase):
 
 
     def setUp(self):
-        self.p = parser.Parser('sample_word_ref.txt')
-        self.p.force_populate()
+        self.p = parser_factory('zh-Hans')
+    
+    def test_single_token(self):
+        result = self.p.parse('感')
+        self.assertEqual(['感'], result)
+
+
+    def test_first_string_match(self):
+        result = self.p.parse('感?')
+        self.assertEqual(['感','?'], result)
+
+    def test_two_word_sequence(self):
+       result = self.p.parse('政府感同身受')
+       self.assertEqual(['政府', '感同身受'], result)
+
+    def test_two_similar_words(self):
+       result = self.p.parse('非政府政府')
+       self.assertEqual(['非政府', '政府'], result)
+
+    def test_matches_and_nonmatches_mixed(self):
+       result = self.p.parse('受非政府盈政府')
+       self.assertEqual(['受','非政府', '盈','政府'], result)
+
+
+class TestChineseSimplifiedParser(unittest.TestCase):
+
+
+    def setUp(self):
+        self.p = ChineseSimplifiedParser()
 
     def test_single_token(self):
         result = self.p.parse('感')
@@ -81,11 +116,17 @@ class TestParser(unittest.TestCase):
        result = self.p.parse('受非政府盈政府')
        self.assertEqual(['受','非政府', '盈','政府'], result)
 
-    def test_parser_error(self):
-        temp = parser.Parser('sample_word_ref.txt')
-        with self.assertRaises(parser.ParserError):
-            temp.parse('a')
 
+class TestParser(unittest.TestCase):
+    def test_unpopulated_error(self):
+        temp = Parser()
+        with self.assertRaises(ParserError):
+            temp.parse('a')
+    
+    def test_reference_error(self):
+        temp = Parser()
+        with self.assertRaises(ParserError):
+            temp.force_populate()
     
 
 if __name__ == '__main__':
