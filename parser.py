@@ -1,81 +1,103 @@
 # parser.py
 
 '''
-This parser will parser any string of text of any language which has no delimiters.
+This parser will parse any string of text of any language which has no delimiters.
 These are languages such as Chinese, Hindi, Thai, etc...
 
 '''
 
 from trie import Trie
+import pickle
 
 class ParserError(Exception):
-
-    def __init__(self, message):
-        self.message = message
+    pass
 
 
-
+def parser_factory(lang):
+    class_ = {
+            'zh-Hans' : ChineseSimplifiedParser,
+            }.get(lang)
+    return class_()
 
 class Parser(object):
 
-
-    def __init__(self, word_file):
-        '''
-        Initializes parser with a word reference file.
-
-        '''
+    def __init__(self):
         self.trie = Trie()
-        self.word_file = word_file
         self.populated = False
-    
+        self.ref = None
+
+    def reference(self, ref):
+        self.ref = ref
+
     def parse(self, string):
-        '''
-        Returns a list of all the longest valid tokens in string.
-        This follows a 'maximal munch' algorithm, matching only
-        the longest strings.
-
-        For example, if 'foot' and 'footwear' are both in the trie,
-        then the resulting list will contain footwear, not foot.
-
-        If a character is not found in the trie, the character will
-        simply be appended to the list.
-
-        '''
-        if self.populated:
-            results = list()
-            while(string):
-                token = self.__next_token(string)
+        if not self.populated:
+            raise ParserError('Parser not yet populated, must cal force_populate()')
+        results = list()
+        while(string):
+            token = self._next_token(string)
+            if token:
                 results.append(token)
                 string = string[len(token):]
-            return results
-        else:
-            raise ParserError("Parser not yet populated, must call force_populate() before parsing.")
+            else:
+                string = ''
+        return results
 
-    def __next_token(self, string):
-        '''
-        Returns the next valid token.
-        '''
+    def _next_token(self, string):
         temp = ''
         for c in string:
             temp += c
-            if temp in self.trie:
+            if temp not in self.trie:
+                if len(temp) > 1:
+                    return temp[:-1]
+                if len(temp) == 1:
+                    return temp
+            else:
                 continue
-            elif (temp not in self.trie and
-                    temp is c):
-                return temp
-            elif(temp not in self.trie and
-                    temp is not c):
-                return temp[:-1]
         return temp
-        
 
     def force_populate(self):
         '''
         Populates the parser with the entire contents of the 
-        word_file.
+        word reference file.
         '''
-        with open(self.word_file, 'r') as f:
+        if not self.ref:
+            raise ParserError('No reference file assigned yet')
+        with open(self.ref, 'r') as f:
             for word in f:
                 self.trie.add_string(word)
         self.populated = True
 
+
+class ChineseSimplifiedParser(Parser):
+    
+
+    def __init__(self):
+        super()
+        self.load()
+    
+    def save(self):
+        with open('data/zh-Hans.pickle', 'wb') as f:
+            pickle.dump(self.trie, f)
+
+    def load(self):
+        with open('data/zh-Hans.pickle', 'rb') as f:
+            self.trie = pickle.load(f)
+            self.populated = True
+
+class ChineseTraditionalParser(Parser):
+
+
+    def __init__(self):
+        super()
+
+class CantoneseSimplifiedParser(Parser):
+
+
+    def __init__(self):
+        super()
+
+class CantoneseTraditionalParser(Parser):
+
+
+    def __init__(self):
+        super()
