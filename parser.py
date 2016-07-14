@@ -1,28 +1,67 @@
 # parser.py
 
-'''
-This parser will parse any string of text of any language which has no delimiters.
-These are languages such as Chinese, Hindi, Thai, etc...
+"""This module provides classes for parsing strings of natural languages
+that do not use space delimiters.
 
-'''
 
-from trie import Trie
+Supported Languages
+===================
+            
+====================== ============= ==========================
+Language               Language Code Parser Class
+====================== ============= ==========================
+Mandarin Simplified    zh-Hans       ChineseSimplifiedParser
+Mandarin Traditional   zh-Hant       ChineseTraditionalParser
+Cantonese Simplified   yue-Hans      CantoneseSimplifiedParser
+Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
+====================== ============= ==========================
+
+..todo:
+    Implement all parsers besides Mandarin Simplified.
+
+"""
+
 import pickle
-
-class ParserError(Exception):
-    pass
-
+from trie import Trie
+from exceptions import ParserError
 
 def parser_factory(lang):
+    """Returns a Parser object specific to the language specified by :param:`lang`.
+
+    :param lang: A string naming the desired parser.  See the keys in :var:`class_`
+    for valid strings.
+
+    :Example:
+
+    >>> chinese_parser = parser_factory('zh-Hans')
+    >>> isinstance(chinese_parser, ChineseSimplifiedParser)
+    True
+
+    >>> cantonese_parser = parser_factory('yue-Hant')
+    >>> isinstance(cantonese_parser, CantoneseTraditionalParser)
+    True
+
+    """
+
     class_ = {
             'zh-Hans' : ChineseSimplifiedParser,
             'zh-Hant' : ChineseTraditionalParser,
             'yue-Hans' : CantoneseSimplifiedParser,
-            'yue-Hans' : CantoneseTraditionalParser,
+            'yue-Hant' : CantoneseTraditionalParser,
             }.get(lang)
     return class_()
 
 class Parser(object):
+    """Defines a generic class for parsing languages with no space delimiters.
+
+    `Parser` uses a pre-existing reference dictionary to build a Trie.  
+    :func:`reference` sets the reference dictionary to a filename.
+    :func:`force_populate` builds the trie out of the reference dictionary file.
+    :func:`parse` returns a list of words parsed from :arg:`string`.  The longest
+    segment is always selected.
+
+
+    """
 
     def __init__(self):
         self.trie = Trie()
@@ -30,9 +69,21 @@ class Parser(object):
         self.ref = None
 
     def reference(self, ref):
+        """Sets the reference dictionary file.
+    
+        ..note:
+
+            The reference file must be a utf-8 text file with one word per line.
+
+        """
         self.ref = ref
 
     def parse(self, string):
+        """Returns a list of words created from segmenting :arg:`string`.
+        
+        ..note:  When a series of characters could match a shorter dictionary entry or
+        longer entry, the longer one is always selected.
+        """
         if not self.populated:
             raise ParserError('Parser not yet populated, must cal force_populate()')
         results = list()
@@ -46,6 +97,8 @@ class Parser(object):
         return results
 
     def __next_token(self, string):
+        """Returns the next token from the :arg:`string`.
+        """
         temp = ''
         for c in string:
             temp += c
@@ -57,10 +110,10 @@ class Parser(object):
         return temp
 
     def force_populate(self):
-        '''
+        """
         Populates the parser with the entire contents of the 
         word reference file.
-        '''
+        """
         if not self.ref:
             raise ParserError('No reference file assigned yet')
         with open(self.ref, 'r') as f:
@@ -70,7 +123,6 @@ class Parser(object):
 
 
 class ChineseSimplifiedParser(Parser):
-    
 
     def __init__(self):
         super()
@@ -87,18 +139,20 @@ class ChineseSimplifiedParser(Parser):
 
 class ChineseTraditionalParser(Parser):
 
-
     def __init__(self):
         super()
 
 class CantoneseSimplifiedParser(Parser):
-
 
     def __init__(self):
         super()
 
 class CantoneseTraditionalParser(Parser):
 
-
     def __init__(self):
         super()
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
