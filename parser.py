@@ -1,11 +1,10 @@
 # parser.py
-
 """This module provides classes for parsing strings of natural languages
 that do not use space delimiters.
 
 
-Supported Languages
-===================
+Currently Supported Languages
+=============================
             
 ====================== ============= ==========================
 Language               Language Code Parser Class
@@ -123,6 +122,9 @@ class Parser(object):
 
 
 class ChineseSimplifiedParser(Parser):
+    """This parser is for Mandarin Chinese written with Simplified Characters.
+
+    """
 
     def __init__(self):
         super()
@@ -138,16 +140,44 @@ class ChineseSimplifiedParser(Parser):
             self.populated = True
 
 class ChineseTraditionalParser(Parser):
+    """This parser is for Mandarin Chinese written with Traditional Characters.
+
+    See :class:`Parser` for functionality.
+
+    """
 
     def __init__(self):
         super()
+    
+    def save(self):
+        with open('data/zh-Hant.pickle', 'wb') as f:
+            pickle.dump(self.trie, f)
+
+    def load(self):
+        with open('data/zh-Hant.pickle', 'rb') as f:
+            self.trie = pickle.load(f)
+            self.populated = True
 
 class CantoneseSimplifiedParser(Parser):
+    """This parser is for Cantonese written with Simplified Characters.
+
+    See :class:`Parser` for functionality.
+
+    ..todo: Implement this class.
+
+    """
 
     def __init__(self):
         super()
 
 class CantoneseTraditionalParser(Parser):
+    """This parser is for Cantonese written with Traditional Characters.
+
+    See :class:`Parser` for functionality.
+
+    ..todo: Implement this class.
+
+    """
 
     def __init__(self):
         super()
