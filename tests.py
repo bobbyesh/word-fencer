@@ -1,3 +1,9 @@
+# tests.py
+"""Defines tests for :class:`Trie`, :class:`Parser`, :func:`parser_factory`.
+
+"""
+
+
 import unittest
 import parser
 from parser import *
@@ -61,6 +67,7 @@ class TestParserFactory(unittest.TestCase):
         p = parser_factory('zh-Hans')
         self.assertTrue(type(p) is ChineseSimplifiedParser)
 
+
 class TestChineseSimplifiedParser(unittest.TestCase):
 
 
@@ -93,6 +100,8 @@ class TestChineseSimplifiedParser(unittest.TestCase):
 
 
 class TestParser(unittest.TestCase):
+
+
     def test_unpopulated_error(self):
         temp = Parser()
         with self.assertRaises(ParserError):
