@@ -1,16 +1,13 @@
 # setup.py
-
 """This module simply reads a dictionary reference file, builds a Trie, and then pickles it.
 """
 
-def build_chinese_simplified():
-    pass
+from parser import *
 
-def build_chinese_traditional():
-    pass
+def build(class_):
+    p = class_()
+    p.save()
 
-def build_cantonese_simplified():
-    pass
-
-def build_cantonese_traditional():
-    pass
+if __name__ == '__main__':
+    build(ChineseSimplifiedParser)
+    build(ChineseTraditionalParser)
