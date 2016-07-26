@@ -80,7 +80,8 @@ class Parser(object):
 
     def __init__(self, ref):
         self.ref = ref
-        self.pickle_file = ref.split('.')[0] + '.pickle'  # 'data/reference_file.txt' ---> 'data/reference_file.pickle'
+        # 'data/reference_file.txt' ---> 'data/reference_file.pickle'
+        self.pickle_file = ref.split('.')[0] + '.pickle'
         self.trie = Trie()
         self.populated = False
         self.load()
@@ -172,7 +173,7 @@ class CantoneseSimplifiedParser(Parser):
     """
 
     def __init__(self):
-        super()
+        super().__init__('data/yue-Hans.txt')
 
 
 class CantoneseTraditionalParser(Parser):
@@ -185,7 +186,13 @@ class CantoneseTraditionalParser(Parser):
     """
 
     def __init__(self):
-        super()
+        super().__init__('data/yue-Hant.txt')
+
+
+class ThaiParser(Parser):
+
+    def __init__(self):
+        super().__init__('data/thai.txt')
 
 
 if __name__ == '__main__':

@@ -64,8 +64,28 @@ class TestParserFactory(unittest.TestCase):
 
 
     def test_chinese_simplified(self):
-        p = parser_factory('zh-Hans')
-        self.assertTrue(type(p) is ChineseSimplifiedParser)
+        zh_Hans = parser_factory('zh-Hans')
+        zh_Hant = parser_factory('zh-Hant')
+        yue_Hans = parser_factory('yue-Hans')
+        yue_Hant = parser_factory('yue-Hant')
+        self.assertTrue(type(zh_Hans) is ChineseSimplifiedParser)
+        self.assertTrue(type(zh_Hant) is ChineseTraditionalParser)
+        self.assertTrue(type(yue_Hans) is CantoneseSimplifiedParser)
+        self.assertTrue(type(yue_Hant) is CantoneseTraditionalParser)
+
+class TestParserBaseClass(object):
+    """Abstract base class for testing parsers."""
+
+    def setUp(self):
+        self.p = self.parser()
+    
+    def test_multiple_tokens(self):
+        string = ''.join(x for x in self.tokens)
+        result = self.p.parse(string)
+        self.assertEqual(set(result), self.tokens)
+
+    def test_empty_str(self):
+        self.assertEqual(self.p.parse(''), [])
 
 
 class TestChineseSimplifiedParser(unittest.TestCase):
@@ -97,6 +117,31 @@ class TestChineseSimplifiedParser(unittest.TestCase):
 
     def test_random(self):
         self.assertTrue('感' in self.p.trie)
+
+
+class TestChineseTraditionalParser(TestParserBaseClass, unittest.TestCase):
+    """Define unique tokens in a set, the parser, and the TestParserBaseClass will automatically test
+    the parser's functionality.
+    """
+
+    tokens = {'鳳凰古城', '鮮明', '鬧翻'}
+    parser = ChineseTraditionalParser
+
+
+
+class TestCantoneseSimplifiedParser(TestParserBaseClass, unittest.TestCase):
+    tokens = {'三八线', '不避艰险', '中国光大银行'}
+    parser = CantoneseSimplifiedParser
+
+
+class TestCantoneseTraditionalParser(TestParserBaseClass, unittest.TestCase):
+    tokens = {'不計其數', '二鬼子', '人頭'}
+    parser = CantoneseTraditionalParser
+
+
+class TestThaiParser(TestParserBaseClass, unittest.TestCase):
+    tokens = {'รูปสี่เหลี่ยมขนมเปียกปูน', 'ทิ้งลูกทิ้งเมีย', 'ผู้ที่สูงอายุ'}
+    parser = ThaiParser
 
 
 class TestParser(unittest.TestCase):
