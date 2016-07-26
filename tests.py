@@ -102,15 +102,9 @@ class TestChineseSimplifiedParser(unittest.TestCase):
 class TestParser(unittest.TestCase):
 
 
-    def test_unpopulated_error(self):
-        temp = Parser()
-        with self.assertRaises(ParserError):
-            temp.parse('a')
-    
     def test_reference_error(self):
-        temp = Parser()
-        with self.assertRaises(ParserError):
-            temp.force_populate()
+        with self.assertRaises(FileNotFoundError):
+            temp = Parser('garbage/path')
     
 
 if __name__ == '__main__':

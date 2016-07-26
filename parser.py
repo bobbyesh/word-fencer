@@ -20,9 +20,11 @@ Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
 
 """
 
+import os
 import pickle
 from trie import Trie
 from exceptions import ParserError
+
 
 def parser_factory(lang):
     """Returns a Parser object specific to the language specified by :param:`lang`.
@@ -50,32 +52,38 @@ def parser_factory(lang):
             }.get(lang)
     return class_()
 
+
 class Parser(object):
+
     """Defines a generic class for parsing languages with no space delimiters.
 
     `Parser` uses a pre-existing reference dictionary to build a Trie.  
-    :func:`reference` sets the reference dictionary to a filename.
     :func:`force_populate` builds the trie out of the reference dictionary file.
     :func:`parse` returns a list of words parsed from :arg:`string`.  The longest
     segment is always selected.
 
 
+    Attributes
+    ==========
+
+    trie : Trie data structure
+        The trie used to perform parsing algorithm.
+    populated : boolean
+        True if the trie has already been populated with words, otherwise False.
+    ref : string
+        The relative path to the reference dictionary file.
+    pickle_file : string
+        The relative path to the pickle file holding a previously built trie.
+
+
     """
 
-    def __init__(self):
+    def __init__(self, ref):
+        self.ref = ref
+        self.pickle_file = ref.split('.')[0] + '.pickle'  # 'data/reference_file.txt' ---> 'data/reference_file.pickle'
         self.trie = Trie()
         self.populated = False
-        self.ref = None
-
-    def reference(self, ref):
-        """Sets the reference dictionary file.
-    
-        ..note:
-
-            The reference file must be a utf-8 text file with one word per line.
-
-        """
-        self.ref = ref
+        self.load()
 
     def parse(self, string):
         """Returns a list of words created from segmenting :arg:`string`.
@@ -84,7 +92,7 @@ class Parser(object):
         longer entry, the longer one is always selected.
         """
         if not self.populated:
-            raise ParserError('Parser not yet populated, must cal force_populate()')
+            raise ParserError('Parser not yet populated, must call force_populate()')
         results = list()
         while(string):
             token = self.__next_token(string)
@@ -108,17 +116,30 @@ class Parser(object):
                     return temp
         return temp
 
+    def load(self):
+        try:
+            with open(self.pickle_file, 'rb') as f:
+                self.trie = pickle.load(f)
+                self.populated = True
+        except FileNotFoundError:
+            self.force_populate()
+            self.save()
+            
     def force_populate(self):
         """
         Populates the parser with the entire contents of the 
         word reference file.
         """
-        if not self.ref:
-            raise ParserError('No reference file assigned yet')
+        if not os.path.exists(self.ref):
+            raise FileNotFoundError("The reference file path '{}' does not exists.".format(self.ref))
         with open(self.ref, 'r') as f:
             for word in f:
                 self.trie.add_string(word)
         self.populated = True
+    
+    def save(self):
+        with open(self.pickle_file, 'wb') as f:
+            pickle.dump(self.trie, f)
 
 
 class ChineseSimplifiedParser(Parser):
@@ -127,41 +148,24 @@ class ChineseSimplifiedParser(Parser):
     """
 
     def __init__(self):
-        super()
-        self.load()
-    
-    def save(self):
-        with open('data/zh-Hans.pickle', 'wb') as f:
-            pickle.dump(self.trie, f)
+        super().__init__('data/zh-Hans.txt')
 
-    def load(self):
-        with open('data/zh-Hans.pickle', 'rb') as f:
-            self.trie = pickle.load(f)
-            self.populated = True
 
 class ChineseTraditionalParser(Parser):
     """This parser is for Mandarin Chinese written with Traditional Characters.
 
-    See :class:`Parser` for functionality.
+    All attributes and functionality inherited from :class:`Parser`.
 
     """
 
     def __init__(self):
-        super()
-    
-    def save(self):
-        with open('data/zh-Hant.pickle', 'wb') as f:
-            pickle.dump(self.trie, f)
+        super().__init__('data/zh-Hant.txt')
 
-    def load(self):
-        with open('data/zh-Hant.pickle', 'rb') as f:
-            self.trie = pickle.load(f)
-            self.populated = True
 
 class CantoneseSimplifiedParser(Parser):
     """This parser is for Cantonese written with Simplified Characters.
 
-    See :class:`Parser` for functionality.
+    All attributes and functionality inherited from :class:`Parser`.
 
     ..todo: Implement this class.
 
@@ -170,10 +174,11 @@ class CantoneseSimplifiedParser(Parser):
     def __init__(self):
         super()
 
+
 class CantoneseTraditionalParser(Parser):
     """This parser is for Cantonese written with Traditional Characters.
 
-    See :class:`Parser` for functionality.
+    All attributes and functionality inherited from :class:`Parser`.
 
     ..todo: Implement this class.
 
