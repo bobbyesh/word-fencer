@@ -5,7 +5,7 @@ that do not use space delimiters.
 
 Currently Supported Languages
 =============================
-            
+
 ====================== ============= ==========================
 Language               Language Code Parser Class
 ====================== ============= ==========================
@@ -49,6 +49,7 @@ def parser_factory(lang):
             'zh-Hant' : ChineseTraditionalParser,
             'yue-Hans' : CantoneseSimplifiedParser,
             'yue-Hant' : CantoneseTraditionalParser,
+            'thai' : ThaiParser,
             }.get(lang)
     return class_()
 
@@ -78,17 +79,17 @@ class Parser(object):
 
     """
 
-    def __init__(self, ref):
-        self.ref = ref
+    def __init__(self, name):
+        self.ref = 'data/' + name + '.txt'
         # 'data/reference_file.txt' ---> 'data/reference_file.pickle'
-        self.pickle_file = ref.split('.')[0] + '.pickle'
+        self.pickle_file = 'data/' + name + '.pickle'
         self.trie = Trie()
         self.populated = False
         self.load()
 
     def parse(self, string):
         """Returns a list of words created from segmenting :arg:`string`.
-        
+
         ..note:  When a series of characters could match a shorter dictionary entry or
         longer entry, the longer one is always selected.
         """
@@ -125,7 +126,7 @@ class Parser(object):
         except FileNotFoundError:
             self.force_populate()
             self.save()
-            
+
     def force_populate(self):
         """
         Populates the parser with the entire contents of the 
@@ -137,7 +138,7 @@ class Parser(object):
             for word in f:
                 self.trie.add_string(word)
         self.populated = True
-    
+
     def save(self):
         with open(self.pickle_file, 'wb') as f:
             pickle.dump(self.trie, f)
@@ -149,7 +150,7 @@ class ChineseSimplifiedParser(Parser):
     """
 
     def __init__(self):
-        super().__init__('data/zh-Hans.txt')
+        super().__init__('zh-Hans')
 
 
 class ChineseTraditionalParser(Parser):
@@ -160,7 +161,7 @@ class ChineseTraditionalParser(Parser):
     """
 
     def __init__(self):
-        super().__init__('data/zh-Hant.txt')
+        super().__init__('zh-Hant')
 
 
 class CantoneseSimplifiedParser(Parser):
@@ -168,12 +169,11 @@ class CantoneseSimplifiedParser(Parser):
 
     All attributes and functionality inherited from :class:`Parser`.
 
-    ..todo: Implement this class.
 
     """
 
     def __init__(self):
-        super().__init__('data/yue-Hans.txt')
+        super().__init__('yue-Hans')
 
 
 class CantoneseTraditionalParser(Parser):
@@ -181,18 +181,23 @@ class CantoneseTraditionalParser(Parser):
 
     All attributes and functionality inherited from :class:`Parser`.
 
-    ..todo: Implement this class.
 
     """
 
     def __init__(self):
-        super().__init__('data/yue-Hant.txt')
+        super().__init__('yue-Hant')
 
 
 class ThaiParser(Parser):
+    """This parser is for Thai.
+
+    All attributes and functionality inherited from :class:`Parser`.
+
+
+    """
 
     def __init__(self):
-        super().__init__('data/thai.txt')
+        super().__init__('thai')
 
 
 if __name__ == '__main__':
