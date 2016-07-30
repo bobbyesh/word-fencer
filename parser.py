@@ -87,7 +87,19 @@ class Parser(object):
         self.populated = False
         self.load()
 
-    def parse(self, string):
+    def parse(self, string, all_combos=False):
+        """Returns a list of words created from segmenting :arg:`string`.
+
+        ..note:  When a series of characters could match a shorter dictionary entry or
+        longer entry, the longer one is always selected.
+        """
+        if not all_combos:
+            return self.default_parse(string)
+        else:
+            return self.all_combinations(string)
+
+
+    def default_parse(self, string):
         """Returns a list of words created from segmenting :arg:`string`.
 
         ..note:  When a series of characters could match a shorter dictionary entry or
@@ -104,6 +116,13 @@ class Parser(object):
             else:
                 string = ''
         return results
+
+    def all_combinations(self, string):
+        token_set = set()
+        for i in range(len(string)):
+            for elem in self.default_parse(string[i:]):
+                token_set.add(elem)
+        return token_set
 
     def __next_token(self, string):
         """Returns the next token from the :arg:`string`.
