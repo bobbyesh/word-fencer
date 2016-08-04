@@ -1,3 +1,17 @@
-# word-fencer
+==========
+wordfencer
+==========
+
 A Python library for tokenizing natural languages without delimiters.
 
+
+Installation
+============
+
+>>sudo pip3 install wordfencer
+
+
+Examples
+========
+
+..todo:  Write Usage examples
