@@ -2,12 +2,25 @@
 """This module simply reads a dictionary reference file, builds a Trie, and then pickles it.
 """
 
-from parser import *
+from distutils.core import setup
+setup(
+    name = "wordfencer",
+    packages = ["wordfencer"],
+    version = "1.0",
+    description = "Parser for natural languages without space delimiters",
+    author = "Bobby Eshleman",
+    author_email = "bobbyeshleman@gmail.com", 
+    url = "https://github.com/bobbyesh/word-fencer"
+    classifiers = [
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3",
+    ]
+    long_description = """\
+Parser For Chinese, Cantonese, and Thai
+---------------------------------------
 
-def build(class_):
-    p = class_()
-    p.save()
-
-if __name__ == '__main__':
-    build(ChineseSimplifiedParser)
-    build(ChineseTraditionalParser)
+Tokenizes the words found in any arbitrary string in any of the supported languages.
+"""
+    
+)
