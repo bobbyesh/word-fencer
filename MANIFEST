@@ -7,9 +7,10 @@ wordfencer/exceptions.py
 wordfencer/parser.py
 wordfencer/tests.py
 wordfencer/trie.py
-wordfencer/yedict_script.py
 wordfencer/data/thai.pickle
 wordfencer/data/yue-Hans.pickle
 wordfencer/data/yue-Hant.pickle
+wordfencer/data/yue.pickle
 wordfencer/data/zh-Hans.pickle
 wordfencer/data/zh-Hant.pickle
+wordfencer/data/zh.pickle
