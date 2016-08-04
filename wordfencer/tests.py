@@ -119,6 +119,17 @@ class TestChineseSimplifiedParser(unittest.TestCase):
         self.assertTrue('感' in self.p.trie)
 
 
+class TestChineseParser(TestParserBaseClass, unittest.TestCase):
+    """Define unique tokens in a set, the parser, and the TestParserBaseClass will automatically test
+    the parser's functionality.  Tests that ChineseParser parses simplfiied
+    and traditional characters.
+    """
+
+    tokens = {'鳳凰古城', '鮮明', '鬧翻', '非政府','感同身受'}
+    parser = ChineseParser
+
+
+
 class TestChineseTraditionalParser(TestParserBaseClass, unittest.TestCase):
     """Define unique tokens in a set, the parser, and the TestParserBaseClass will automatically test
     the parser's functionality.
@@ -127,6 +138,10 @@ class TestChineseTraditionalParser(TestParserBaseClass, unittest.TestCase):
     tokens = {'鳳凰古城', '鮮明', '鬧翻'}
     parser = ChineseTraditionalParser
 
+
+class TestCantoneseParser(TestParserBaseClass, unittest.TestCase):
+    tokens = {'三八线', '不避艰险', '中国光大银行', '不計其數', '二鬼子', '人頭'}
+    parser = CantoneseParser
 
 
 class TestCantoneseSimplifiedParser(TestParserBaseClass, unittest.TestCase):

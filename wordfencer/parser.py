@@ -9,14 +9,14 @@ Currently Supported Languages
 ====================== ============= ==========================
 Language               Language Code Parser Class
 ====================== ============= ==========================
+Mandarin               zh            ChineseParser
 Mandarin Simplified    zh-Hans       ChineseSimplifiedParser
 Mandarin Traditional   zh-Hant       ChineseTraditionalParser
+Cantonese              yue           CantoneseParser
 Cantonese Simplified   yue-Hans      CantoneseSimplifiedParser
 Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
 ====================== ============= ==========================
 
-..todo:
-    Implement all parsers besides Mandarin Simplified.
 
 """
 
@@ -47,8 +47,10 @@ def parser_factory(lang):
     class_ = {
             'zh-Hans' : ChineseSimplifiedParser,
             'zh-Hant' : ChineseTraditionalParser,
+            'zh' : ChineseParser,
             'yue-Hans' : CantoneseSimplifiedParser,
             'yue-Hant' : CantoneseTraditionalParser,
+            'yue' : CantoneseParser,
             'thai' : ThaiParser,
             }.get(lang)
     return class_()
@@ -163,8 +165,17 @@ class Parser(object):
             pickle.dump(self.trie, f)
 
 
+class ChineseParser(Parser):
+    """This parser is for Mandarin Chinese written with Simplified OR Traditional characters.
+
+    """
+
+    def __init__(self):
+        super().__init__('zh')
+
+
 class ChineseSimplifiedParser(Parser):
-    """This parser is for Mandarin Chinese written with Simplified Characters.
+    """This parser is for Mandarin Chinese written with Simplified characters.
 
     """
 
@@ -173,7 +184,7 @@ class ChineseSimplifiedParser(Parser):
 
 
 class ChineseTraditionalParser(Parser):
-    """This parser is for Mandarin Chinese written with Traditional Characters.
+    """This parser is for Mandarin Chinese written with Traditional characters.
 
     All attributes and functionality inherited from :class:`Parser`.
 
@@ -183,8 +194,17 @@ class ChineseTraditionalParser(Parser):
         super().__init__('zh-Hant')
 
 
+class CantoneseParser(Parser):
+    """This parser is for Cantonese written with Simplified OR Traditional characters.
+
+    """
+
+    def __init__(self):
+        super().__init__('yue')
+
+
 class CantoneseSimplifiedParser(Parser):
-    """This parser is for Cantonese written with Simplified Characters.
+    """This parser is for Cantonese written with Simplified characters.
 
     All attributes and functionality inherited from :class:`Parser`.
 
@@ -196,7 +216,7 @@ class CantoneseSimplifiedParser(Parser):
 
 
 class CantoneseTraditionalParser(Parser):
-    """This parser is for Cantonese written with Traditional Characters.
+    """This parser is for Cantonese written with Traditional characters.
 
     All attributes and functionality inherited from :class:`Parser`.
 
