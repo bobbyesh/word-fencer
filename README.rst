@@ -21,7 +21,7 @@ Thai                   th or thai    ThaiParser
 ====================== ============= ==========================
 
 
-..note:  The general parsers ChineseParser (zh) and CantoneseParser (yue) support both simplified
+:Note:  The general parsers ChineseParser (zh) and CantoneseParser (yue) support both simplified
 and traditional characters.
 
 
