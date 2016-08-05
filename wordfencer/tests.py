@@ -1,5 +1,13 @@
 # tests.py
-"""Defines tests for :class:`Trie`, :class:`Parser`, :func:`parser_factory`.
+"""
+
+Copyright (c) 2016 Robert Eshleman
+This code is available under the "MIT License". Please see the file LICENSE in 
+this distribution for license terms.
+
+
+Defines tests for :class:`Trie`, :class:`Parser`, :func:`parser_factory`.
+
 
 """
 

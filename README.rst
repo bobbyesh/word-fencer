@@ -2,7 +2,13 @@
 wordfencer
 ==========
 
-A Python library for tokenizing natural languages without delimiters.
+
+Copyright (c) 2016 Robert Eshleman
+This code is available under the "MIT License". Please see the file LICENSE in 
+this distribution for license terms.
+
+
+This is a Python module for tokenizing natural languages without delimiters.
 
 
 Supported Languages
@@ -81,5 +87,10 @@ The extra subtag specifies the script, here is Chinese ("zh") with simplified ha
 >>> parser.parse('真理惟一可靠的标准就是永远自相符合。')
 ['真理', '惟一', '可靠', '的', '标准', '就是', '永远', '自相', '符合', '。']
 
+
+
+The reference dictionaries used for parsing were built using the data form the
+CEDICT and YEDICT free dictionaries available through the creative commons
+license.
 
 Copyright (c) 2016 Robert Eshleman

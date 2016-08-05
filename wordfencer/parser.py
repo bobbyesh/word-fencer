@@ -1,5 +1,11 @@
 # parser.py
-"""This module provides classes for parsing strings of natural languages
+"""
+Copyright (c) 2016 Robert Eshleman
+This code is available under the "MIT License". Please see the file LICENSE in 
+this distribution for license terms.
+
+
+This module provides classes for parsing strings of natural languages
 that do not use space delimiters.
 
 
