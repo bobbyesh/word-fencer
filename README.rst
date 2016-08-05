@@ -45,7 +45,7 @@ langauges they parse.
 >>> parser = ChineseParser()
 
 
-The parse method returns a list of the input string's subtokens, like this:
+The `parse` method returns a list of the input string's subtokens, like this:
 
 >>> parser.parse('真理惟一可靠的标准就是永远自相符合。')
 ['真理', '惟一', '可靠', '的', '标准', '就是', '永远', '自相', '符合', '。']
@@ -63,7 +63,7 @@ Using the Factory
 -----------------
 
 
-The parser_factory takes a string language tag and returns a parser for that language.
+The `parser_factory` takes a string language tag and returns a parser for that language.
 The language tags that the `parser_factory` accepts are standard IETF language tags
 defined by the IANA Language Subtag Registry.  See `Supported Languages` above for the
 tags and which languages they refer to.
