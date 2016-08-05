@@ -18,7 +18,7 @@ class Trie(collections.abc.Container):
                 current_node[pair[0]] = pair[1]
             current_node = current_node[pair[0]]
 
-    def __contains__(self, seq): 
+    def __contains__(self, seq):
         current_node = self.root
         try:
             for elem in seq:
@@ -26,7 +26,7 @@ class Trie(collections.abc.Container):
         except KeyError:
             return False
         return True
-        
+
     def find_match(self, string):
         current_node = self.root
         try:

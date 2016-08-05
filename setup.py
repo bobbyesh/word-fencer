@@ -2,14 +2,14 @@
 """This module simply reads a dictionary reference file, builds a Trie, and then pickles it.
 """
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 setup(
     name = "wordfencer",
-    packages = ["wordfencer"],
-    version = "1.0",
+    packages = find_packages(),
+    version = "1.1.4",
     description = "Parser for natural languages without space delimiters",
     author = "Bobby Eshleman",
-    author_email = "bobbyeshleman@gmail.com", 
+    author_email = "bobbyeshleman@gmail.com",
     url = "https://github.com/bobbyesh/word-fencer",
     classifiers = [
         "Programming Language :: Python",
@@ -21,11 +21,12 @@ setup(
         "Natural Language :: Chinese (Traditional)",
         "Natural Language :: Thai",
     ],
+    include_package_data = True,
+    package_data = { '' : ['*.pickle'] },
     long_description = """\
 Parser For Chinese, Cantonese, and Thai
 ---------------------------------------
 
 Tokenizes the words found in any arbitrary string in any of the supported languages.
 """,
-    
 )

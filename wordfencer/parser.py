@@ -22,8 +22,8 @@ Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
 
 import os
 import pickle
-from trie import Trie
-from exceptions import ParserError
+from wordfencer.trie import Trie
+from wordfencer.exceptions import ParserError
 
 
 def parser_factory(lang):
@@ -75,16 +75,15 @@ class Parser(object):
         True if the trie has already been populated with words, otherwise False.
     ref : string
         The relative path to the reference dictionary file.
-    pickle_file : string
+    file : string
         The relative path to the pickle file holding a previously built trie.
 
 
     """
 
     def __init__(self, name):
-        self.ref = 'data/' + name + '.txt'
-        # 'data/reference_file.txt' ---> 'data/reference_file.pickle'
-        self.pickle_file = 'data/' + name + '.pickle'
+        self.ref = os.path.dirname(__file__) + '/data/' + name + '.txt'
+        self.file = os.path.dirname(__file__) + '/data/' + name + '.pickle'
         self.trie = Trie()
         self.populated = False
         self.load()
@@ -141,7 +140,7 @@ class Parser(object):
 
     def load(self):
         try:
-            with open(self.pickle_file, 'rb') as f:
+            with open(self.file, 'rb') as f:
                 self.trie = pickle.load(f)
                 self.populated = True
         except FileNotFoundError:
@@ -161,7 +160,7 @@ class Parser(object):
         self.populated = True
 
     def save(self):
-        with open(self.pickle_file, 'wb') as f:
+        with open(self.file, 'wb') as f:
             pickle.dump(self.trie, f)
 
 
