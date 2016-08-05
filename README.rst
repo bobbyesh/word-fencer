@@ -4,6 +4,7 @@ wordfencer
 
 
 Copyright (c) 2016 Robert Eshleman
+
 This code is available under the "MIT License". Please see the file LICENSE in 
 this distribution for license terms.
 
