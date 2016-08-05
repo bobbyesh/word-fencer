@@ -95,7 +95,7 @@ The extra subtag specifies the script, here is Chinese ("zh") with simplified ha
 
 
 
-The reference dictionaries used for parsing were built using the data form the
+The reference dictionaries used for parsing were built using the data from the
 CEDICT and YEDICT free dictionaries available through the creative commons
 license.
 
