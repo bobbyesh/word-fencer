@@ -17,7 +17,12 @@ Mandarin Traditional   zh-Hant       ChineseTraditionalParser
 Cantonese              yue           CantoneseParser
 Cantonese Simplified   yue-Hans      CantoneseSimplifiedParser
 Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
+Thai                   th or thai    ThaiParser
 ====================== ============= ==========================
+
+
+..note:  The general parsers ChineseParser (zh) and CantoneseParser (yue) support both simplified
+and traditional characters.
 
 
 Installation
@@ -34,10 +39,11 @@ Examples
 
 Import and instantiate which parser you want to use.  Refer to 
 `Supported Languages` above for the names of all the available parsers and the
-langauges they parser.
+langauges they parse.
 
 >>> from wordfencer.parser import ChineseParser
 >>> parser = ChineseParser()
+
 
 The parse method returns a list of the input string's subtokens, like this:
 
@@ -53,25 +59,25 @@ all_combos option to true:
  '相符', '远', '合', '理', '惟一', '标准', '可靠'}
 
 
-
 Using the Factory
 -----------------
 
 
 The parser_factory takes a string language tag and returns a parser for that language.
-See `Supported Languages` above for the tags and which languages they refer to.
+The language tags that the `parser_factory` accepts are standard IETF language tags
+defined by the IANA Language Subtag Registry.  See `Supported Languages` above for the
+tags and which languages they refer to.
 
 >>> from wordfencer.parser import parser_factory
 >>> parser = parser_factory('zh')
 >>> parser.parse('真理惟一可靠的标准就是永远自相符合。')
 ['真理', '惟一', '可靠', '的', '标准', '就是', '永远', '自相', '符合', '。']
->>> 
+
+
+The extra subtag specifies the script, here is Chinese ("zh") with simplified hanzi 
+("Hans").
 
 
 >>> parser = parser_factory('zh-Hans')
 >>> parser.parse('真理惟一可靠的标准就是永远自相符合。')
 ['真理', '惟一', '可靠', '的', '标准', '就是', '永远', '自相', '符合', '。']
-
-
-
-

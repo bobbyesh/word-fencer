@@ -15,6 +15,7 @@ Mandarin Traditional   zh-Hant       ChineseTraditionalParser
 Cantonese              yue           CantoneseParser
 Cantonese Simplified   yue-Hans      CantoneseSimplifiedParser
 Cantonese Traditional  yue-Hant      CantoneseTraditionalParser
+Thai                   th or thai    ThaiParser
 ====================== ============= ==========================
 
 
@@ -52,6 +53,7 @@ def parser_factory(lang):
             'yue-Hant' : CantoneseTraditionalParser,
             'yue' : CantoneseParser,
             'thai' : ThaiParser,
+            'th' : ThaiParser,
             }.get(lang)
     return class_()
 
@@ -60,7 +62,7 @@ class Parser(object):
 
     """Defines a generic class for parsing languages with no space delimiters.
 
-    `Parser` uses a pre-existing reference dictionary to build a Trie.  
+    `Parser` uses a pre-existing reference dictionary to build a Trie.
     :func:`force_populate` builds the trie out of the reference dictionary file.
     :func:`parse` returns a list of words parsed from :arg:`string`.  The longest
     segment is always selected.
