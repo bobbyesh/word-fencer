@@ -38,12 +38,17 @@ Install using pip like this:
     $ sudo pip3 install wordfencer
 
 
+Tarball can found here_.
+
+.. _here: https://pypi.python.org/pypi/wordfencer
+
+
 Examples
 ========
 
 
 Import and instantiate which parser you want to use.  Refer to 
-`Supported Languages` above for the names of all the available parsers and the
+`Supported Languages`_ for the names of all the available parsers and the
 langauges they parse.
 
 >>> from wordfencer.parser import ChineseParser
@@ -70,7 +75,7 @@ Using the Factory
 
 The `parser_factory` takes a string language tag and returns a parser for that language.
 The language tags that the `parser_factory` accepts are standard IETF language tags
-defined by the IANA Language Subtag Registry.  See `Supported Languages` above for the
+defined by the IANA Language Subtag Registry.  See `Supported Languages`_ for the
 tags and which languages they refer to.
 
 >>> from wordfencer.parser import parser_factory

@@ -1,7 +1,7 @@
 # parser.py
 """
 Copyright (c) 2016 Robert Eshleman
-This code is available under the "MIT License". Please see the file LICENSE in 
+This code is available under the "MIT License". Please see the file LICENSE in
 this distribution for license terms.
 
 
@@ -29,7 +29,6 @@ Thai                   th or thai    ThaiParser
 
 import os
 import pickle
-from .exceptions import ParserError
 
 
 def parser_factory(lang):
