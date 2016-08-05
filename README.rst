@@ -80,3 +80,6 @@ The extra subtag specifies the script, here is Chinese ("zh") with simplified ha
 >>> parser = parser_factory('zh-Hans')
 >>> parser.parse('真理惟一可靠的标准就是永远自相符合。')
 ['真理', '惟一', '可靠', '的', '标准', '就是', '永远', '自相', '符合', '。']
+
+
+Copyright (c) 2016 Robert Eshleman
