@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name = "wordfencer",
     packages = find_packages(),
-    version = "1.1.5",
+    version = "1.1.6",
     description = "Parser for natural languages without space delimiters",
     author = "Bobby Eshleman",
     author_email = "bobbyeshleman@gmail.com",

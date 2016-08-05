@@ -29,8 +29,7 @@ Thai                   th or thai    ThaiParser
 
 import os
 import pickle
-from wordfencer.trie import Trie
-from wordfencer.exceptions import ParserError
+from .exceptions import ParserError
 
 
 def parser_factory(lang):
@@ -69,7 +68,7 @@ class Parser(object):
     """Defines a generic class for parsing languages with no space delimiters.
 
     `Parser` uses a pre-existing reference dictionary to build a Trie.
-    :func:`force_populate` builds the trie out of the reference dictionary file.
+    :func:`force_populate` builds the set out of the reference dictionary file.
     :func:`parse` returns a list of words parsed from :arg:`string`.  The longest
     segment is always selected.
 
@@ -77,14 +76,14 @@ class Parser(object):
     Attributes
     ==========
 
-    trie : Trie data structure
-        The trie used to perform parsing algorithm.
+    db : set
+        The data structure used to perform parsing algorithm.
     populated : boolean
-        True if the trie has already been populated with words, otherwise False.
+        True if the db has already been populated with words, otherwise False.
     ref : string
         The relative path to the reference dictionary file.
     file : string
-        The relative path to the pickle file holding a previously built trie.
+        The relative path to the pickle file holding a previously built set.
 
 
     """
@@ -92,7 +91,7 @@ class Parser(object):
     def __init__(self, name):
         self.ref = os.path.dirname(__file__) + '/data/' + name + '.txt'
         self.file = os.path.dirname(__file__) + '/data/' + name + '.pickle'
-        self.trie = Trie()
+        self.db = set()
         self.populated = False
         self.load()
 
@@ -114,17 +113,23 @@ class Parser(object):
         ..note:  When a series of characters could match a shorter dictionary entry or
         longer entry, the longer one is always selected.
         """
-        if not self.populated:
-            raise ParserError('Parser not yet populated, must call force_populate()')
         results = list()
         while(string):
-            token = self.__next_token(string)
-            if token:
-                results.append(token)
-                string = string[len(token):]
-            else:
-                string = ''
+            token = self.longest(string)
+            results.append(token)
+            string = string[len(token):]
         return results
+
+    def longest(self, string):
+        if len(string) == 1:
+            return string
+        result = string[0]
+        temp = result
+        for c in string[1:]:
+            temp += c
+            if temp in self.db:
+                result = temp
+        return result
 
     def all_combinations(self, string):
         token_set = set()
@@ -133,23 +138,10 @@ class Parser(object):
                 token_set.add(elem)
         return token_set
 
-    def __next_token(self, string):
-        """Returns the next token from the :arg:`string`.
-        """
-        temp = ''
-        for c in string:
-            temp += c
-            if temp not in self.trie:
-                if len(temp) > 1:
-                    return temp[:-1]
-                if len(temp) == 1:
-                    return temp
-        return temp
-
     def load(self):
         try:
             with open(self.file, 'rb') as f:
-                self.trie = pickle.load(f)
+                self.db = pickle.load(f)
                 self.populated = True
         except FileNotFoundError:
             self.force_populate()
@@ -157,19 +149,20 @@ class Parser(object):
 
     def force_populate(self):
         """
-        Populates the parser with the entire contents of the 
+        Populates the parser with the entire contents of the
         word reference file.
         """
         if not os.path.exists(self.ref):
             raise FileNotFoundError("The reference file path '{}' does not exists.".format(self.ref))
         with open(self.ref, 'r') as f:
             for word in f:
-                self.trie.add_string(word)
+                word = word.strip('\n')
+                self.db.add(word)
         self.populated = True
 
     def save(self):
         with open(self.file, 'wb') as f:
-            pickle.dump(self.trie, f)
+            pickle.dump(self.db, f)
 
 
 class ChineseParser(Parser):
