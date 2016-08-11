@@ -103,4 +103,6 @@ The reference dictionaries used for parsing were built using the data from the
 CEDICT and YEDICT free dictionaries available through the creative commons
 license.
 
+Presentation: https://docs.google.com/presentation/d/1GBE3QqZLmcGwB0RsqxjGvJBBdFKNjn37LCfFjPJg_kM/edit?usp=sharing
+
 Copyright (c) 2016 Robert Eshleman
