@@ -31,6 +31,13 @@ import os
 import pickle
 
 
+def is_cjk_punctuation(char):
+    """Returns true if char is a punctuation mark in a CJK language."""
+    lower = int('0x3000', 16)
+    higher = int('0x300F', 16)
+    return ord(char) >= lower and ord(char) <= higher
+
+
 def parser_factory(lang):
     """Returns a Parser object specific to the language specified by :param:`lang`.
 

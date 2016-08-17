@@ -127,7 +127,13 @@ class TestParser(unittest.TestCase):
     def test_reference_error(self):
         with self.assertRaises(FileNotFoundError):
             temp = Parser('garbage/path')
-    
+
+class TestCJKPunctuation(unittest.TestCase):
+
+    def test_cjk_punctuation(self):
+        self.assertTrue(is_cjk_punctuation('。'))
+        self.assertFalse(is_cjk_punctuation('a'))
+
 
 if __name__ == '__main__':
     unittest.main()
